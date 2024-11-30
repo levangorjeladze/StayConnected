@@ -14,7 +14,7 @@
 		D2F762282CFAED2200AABA0D /* Exceptions for "StayConnected" folder in "StayConnected" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Resources Folder/Info.plist",
+				Info.plist,
 			);
 			target = D2F762152CFAED1F00AABA0D /* StayConnected */;
 		};
@@ -145,6 +145,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 525YJXC8Z8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = StayConnected/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -172,6 +173,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 525YJXC8Z8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = StayConnected/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
