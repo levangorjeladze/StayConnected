@@ -134,6 +134,4 @@ extension QuestionTableViewCell: UICollectionViewDelegate, UICollectionViewDataS
         cell.configure(with: viewModel.getTag(at: indexPath.row))
         return cell
     }
-    
-    
 }
