@@ -6,3 +6,14 @@
 //
 
 import Foundation
+import UIKit
+
+class AnsweredQuestionViewController: UIViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        navigationItem.title = "Answered Questions"
+        
+    }
+}
