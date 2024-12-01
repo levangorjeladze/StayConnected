@@ -42,8 +42,8 @@ class MainTabBarController: UITabBarController {
         
         self.viewControllers = controllers.map { UINavigationController(rootViewController: $0) }
         tabBar.backgroundColor = .systemGray5
-        tabBar.tintColor = UIColor.black
+        tabBar.tintColor = UIColor(hex: "#4E53A2")
         tabBar.layer.cornerRadius = 10
-        tabBar.unselectedItemTintColor = UIColor(white: 0.3, alpha: 1.0)
+        tabBar.unselectedItemTintColor = .systemGray
     }
 }
