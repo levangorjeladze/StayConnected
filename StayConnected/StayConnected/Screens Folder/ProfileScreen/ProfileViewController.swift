@@ -8,6 +8,9 @@
 import UIKit
 
 class ProfileViewController: UIViewController {
+    
+    var answeredQuestionsLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -77,13 +80,6 @@ class ProfileViewController: UIViewController {
         answeredQuestionsLabel.translatesAutoresizingMaskIntoConstraints = false
         informationSection.addSubview(answeredQuestionsLabel)
         
-        let answeredQuestionsCountLabel = UILabel()
-        answeredQuestionsCountLabel.text = "5"
-        answeredQuestionsCountLabel.textColor = .black
-        answeredQuestionsCountLabel.textAlignment = .right
-        answeredQuestionsCountLabel.translatesAutoresizingMaskIntoConstraints = false
-        informationSection.addSubview(answeredQuestionsCountLabel)
-        
         let scoreSeparatorView = UIView()
         scoreSeparatorView.backgroundColor = .black
         scoreSeparatorView.translatesAutoresizingMaskIntoConstraints = false
@@ -112,6 +108,10 @@ class ProfileViewController: UIViewController {
         bottomSeparatorView.backgroundColor = .black
         bottomSeparatorView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(bottomSeparatorView)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnsweredQuestions))
+        answeredQuestionsLabel.isUserInteractionEnabled = true
+        answeredQuestionsLabel.addGestureRecognizer(tapGesture)
         
         NSLayoutConstraint.activate([
             profileLabel.widthAnchor.constraint(equalToConstant: 119),
@@ -159,11 +159,6 @@ class ProfileViewController: UIViewController {
             answeredQuestionsLabel.topAnchor.constraint(equalTo: informationSection.topAnchor, constant: 134),
             answeredQuestionsLabel.leadingAnchor.constraint(equalTo: informationSection.leadingAnchor, constant: 12),
             
-            answeredQuestionsCountLabel.widthAnchor.constraint(equalToConstant: 21),
-            answeredQuestionsCountLabel.heightAnchor.constraint(equalToConstant: 22),
-            answeredQuestionsCountLabel.topAnchor.constraint(equalTo: informationSection.topAnchor, constant: 134),
-            answeredQuestionsCountLabel.trailingAnchor.constraint(equalTo: informationSection.trailingAnchor, constant: -12),
-            
             scoreSeparatorView.widthAnchor.constraint(equalToConstant: 365),
             scoreSeparatorView.heightAnchor.constraint(equalToConstant: 1),
             scoreSeparatorView.topAnchor.constraint(equalTo: scoreLabel.bottomAnchor, constant: 12),
@@ -189,5 +184,10 @@ class ProfileViewController: UIViewController {
             bottomSeparatorView.topAnchor.constraint(equalTo: logOutButton.bottomAnchor, constant: 8),
             bottomSeparatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
+    }
+    
+    @objc func didTapAnsweredQuestions() {
+        let answeredQuestionVC = AnsweredQuestionViewController()
+        navigationController?.pushViewController(answeredQuestionVC, animated: true)
     }
 }
