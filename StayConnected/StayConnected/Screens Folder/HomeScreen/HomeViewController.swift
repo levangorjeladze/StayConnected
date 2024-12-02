@@ -18,7 +18,7 @@ final class HomeViewController: UIViewController {
         return label
     }()
     
-    private let addQuestionButton: UIButton = {
+    private lazy var addQuestionButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.tintColor = UIColor(hex: "#4E53A2")
@@ -26,6 +26,7 @@ final class HomeViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 20).isActive = true
         button.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        button.addTarget(self, action: #selector (addQuestionButtonTapped), for: .touchUpInside)
         
         return button
     }()
@@ -132,6 +133,10 @@ final class HomeViewController: UIViewController {
         questionTableView.trailingAnchor.constraint(equalTo: navigationStackView.trailingAnchor)
             .isActive = true
         questionTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    }
+    
+    @objc private func addQuestionButtonTapped() {
+        navigationController?.present(AddQuestionViewController(), animated: true)
     }
 }
 
