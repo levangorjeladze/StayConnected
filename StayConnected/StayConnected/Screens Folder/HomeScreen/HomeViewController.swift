@@ -72,6 +72,7 @@ final class HomeViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(SearchTableViewCell.self, forCellReuseIdentifier: SearchTableViewCell.identifier)
         tableView.register(QuestionTableViewCell.self, forCellReuseIdentifier: QuestionTableViewCell.identifier)
+        tableView.register(EmptyQuestionsCell.self, forCellReuseIdentifier: EmptyQuestionsCell.identifier)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
@@ -97,6 +98,12 @@ final class HomeViewController: UIViewController {
         setupQuestionStackView()
         setupNavigation()
         setupQuestionTableView()
+        viewModel.fetchPosts { [weak self] in
+            DispatchQueue.main.async {
+                self?.questionTableView.reloadData()
+            }
+
+        }
     }
     
     private func setupQuestionStackView() {
@@ -151,7 +158,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case 0:
             return 1
         case 1:
-            return 10
+            return viewModel.getPostsCount() > 0 ? viewModel.getPostsCount() : 1
         default:
             return 0
         }
@@ -164,9 +171,19 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     as? SearchTableViewCell else { return UITableViewCell() }
             return cell
         case 1:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: QuestionTableViewCell.identifier, for: indexPath)
-                    as? QuestionTableViewCell else { return UITableViewCell() }
-            return cell
+            if viewModel.getTagsCount() > 0 {
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: QuestionTableViewCell.identifier, for: indexPath)
+                        as? QuestionTableViewCell else {
+                    return UITableViewCell()
+                }
+                return cell
+            } else {
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: EmptyQuestionsCell.identifier, for: indexPath)
+                        as? EmptyQuestionsCell else {
+                    return UITableViewCell()
+                }
+                return cell
+            }
         default:
             return UITableViewCell()
         }

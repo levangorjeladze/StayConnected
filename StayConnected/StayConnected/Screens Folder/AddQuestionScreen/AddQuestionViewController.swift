@@ -202,6 +202,3 @@ extension AddQuestionViewController: UICollectionViewDelegate, UICollectionViewD
     
 }
 
-#Preview {
-    AddQuestionViewController()
-}
