@@ -43,29 +43,6 @@ class SignUpViewController: UIViewController {
         return textField
     }()
 
-    let usernameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Email"
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .black
-        label.alpha = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
-    let usernameTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Enter your email"
-        textField.borderStyle = .none
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor.black.cgColor
-        textField.layer.cornerRadius = 8
-        textField.font = UIFont.systemFont(ofSize: 16)
-        textField.alpha = 1
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        return textField
-    }()
-
     let passwordLabel: UILabel = {
         let label = UILabel()
         label.text = "Password"
@@ -134,8 +111,6 @@ class SignUpViewController: UIViewController {
         view.addSubview(signUpLabel)
         view.addSubview(fullNameLabel)
         view.addSubview(fullNameTextField)
-        view.addSubview(usernameLabel)
-        view.addSubview(usernameTextField)
         view.addSubview(passwordLabel)
         view.addSubview(passwordTextField)
         view.addSubview(confirmPasswordLabel)
@@ -164,16 +139,8 @@ class SignUpViewController: UIViewController {
             fullNameTextField.widthAnchor.constraint(equalToConstant: 327),
             fullNameTextField.heightAnchor.constraint(equalToConstant: 52),
 
-            usernameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            usernameLabel.topAnchor.constraint(equalTo: fullNameTextField.bottomAnchor, constant: 30),
-
-            usernameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            usernameTextField.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 5),
-            usernameTextField.widthAnchor.constraint(equalToConstant: 327),
-            usernameTextField.heightAnchor.constraint(equalToConstant: 52),
-
             passwordLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            passwordLabel.topAnchor.constraint(equalTo: usernameTextField.bottomAnchor, constant: 30),
+            passwordLabel.topAnchor.constraint(equalTo: fullNameTextField.bottomAnchor, constant: 30),
 
             passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             passwordTextField.topAnchor.constraint(equalTo: passwordLabel.bottomAnchor, constant: 5),
