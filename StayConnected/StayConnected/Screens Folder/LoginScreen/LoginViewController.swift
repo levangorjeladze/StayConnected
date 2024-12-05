@@ -9,13 +9,13 @@ import UIKit
 
 class LoginViewController: UIViewController {
     
+    let viewModel = LoginViewModel()
+
     let loginLabel: UILabel = {
         let label = UILabel()
         label.text = "Log in"
-        label.font = UIFont(name: "Inter", size: 30)
         label.font = UIFont.boldSystemFont(ofSize: 30)
         label.textAlignment = .left
-        label.alpha = 1
         return label
     }()
     
@@ -23,7 +23,6 @@ class LoginViewController: UIViewController {
         let label = UILabel()
         label.text = "Email"
         label.font = UIFont(name: "Inter", size: 12)
-        label.alpha = 1
         return label
     }()
     
@@ -31,17 +30,14 @@ class LoginViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "Enter your email"
         textField.borderStyle = .roundedRect
-        textField.alpha = 1
         textField.font = UIFont(name: "Inter", size: 16)
         return textField
     }()
-    
     
     let passwordLabel: UILabel = {
         let label = UILabel()
         label.text = "Password"
         label.font = UIFont(name: "Inter", size: 12)
-        label.alpha = 1
         return label
     }()
     
@@ -50,7 +46,6 @@ class LoginViewController: UIViewController {
         textField.placeholder = "Enter your password"
         textField.isSecureTextEntry = true
         textField.borderStyle = .roundedRect
-        textField.alpha = 1
         textField.font = UIFont(name: "Inter", size: 16)
         return textField
     }()
@@ -58,21 +53,16 @@ class LoginViewController: UIViewController {
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Log in", for: .normal)
-        button.alpha = 1
         button.backgroundColor = UIColor(hex: "#4E53A2")
         button.layer.cornerRadius = 12
         button.setTitleColor(.white, for: .normal)
-        button.contentEdgeInsets = UIEdgeInsets(top: 20, left: 24, bottom: 20, right: 24)
-        button.layer.cornerRadius = 12
         return button
     }()
     
     let signUpButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Sign Up", for: .normal)
-        button.alpha = 1
         button.setTitleColor(UIColor(hex: "#5E6366"), for: .normal)
-        button.titleLabel?.font = UIFont(name: "Anek Devanagari", size: 14)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         return button
     }()
@@ -90,14 +80,36 @@ class LoginViewController: UIViewController {
         view.addSubview(signUpButton)
         
         setupConstraints()
-
+        
+        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
     }
-
+    
     @objc func signUpButtonTapped() {
         let signUpViewController = SignUpViewController()
         navigationController?.pushViewController(signUpViewController, animated: true)
     }
+    
+    @objc func loginButtonTapped() {
+        guard let email = emailTextField.text, let password = passwordTextField.text else { return }
+        
+        if let _ = KeychainService.getAccessToken() {
+            let homeViewController = HomeViewController()
+            navigationController?.pushViewController(homeViewController, animated: true)
+        } else {
+            viewModel.login(email: email, password: password) { [weak self] success in
+                if success {
+                    let homeViewController = HomeViewController()
+                    self?.navigationController?.pushViewController(homeViewController, animated: true)
+                } else {
+                    let alert = UIAlertController(title: "Error", message: "Login failed", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    self?.present(alert, animated: true)
+                }
+            }
+        }
+    }
+
     
     func setupConstraints() {
         loginLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -113,23 +125,23 @@ class LoginViewController: UIViewController {
             loginLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 187),
             loginLabel.widthAnchor.constraint(equalToConstant: 111),
             loginLabel.heightAnchor.constraint(equalToConstant: 30),
-
+            
             emailLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             emailLabel.topAnchor.constraint(equalTo: loginLabel.bottomAnchor, constant: 30),
-
+            
             emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             emailTextField.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 5),
             emailTextField.widthAnchor.constraint(equalToConstant: 327),
             emailTextField.heightAnchor.constraint(equalToConstant: 52),
-
+            
             passwordLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             passwordLabel.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 30),
-
+            
             passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             passwordTextField.topAnchor.constraint(equalTo: passwordLabel.bottomAnchor, constant: 5),
             passwordTextField.widthAnchor.constraint(equalToConstant: 327),
             passwordTextField.heightAnchor.constraint(equalToConstant: 52),
-
+            
             loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25.01),
             loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 50),
             loginButton.widthAnchor.constraint(equalToConstant: 342.7),
@@ -142,6 +154,7 @@ class LoginViewController: UIViewController {
         ])
     }
 }
+
 
 extension UIColor {
     convenience init(hex: String) {
