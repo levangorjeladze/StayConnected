@@ -19,15 +19,15 @@ class KeychainService {
     }
     
     static func getAccessToken() -> String? {
-        return getToken(forKey: "access_token")
+        return getToken(key: "access_token")
     }
     
     static func getRefreshToken() -> String? {
-        return getToken(forKey: "refresh_token")
+        return getToken(key: "refresh_token")
     }
     
-    static func save(token: String, key: String) {
-        guard let data = token.data(using: .utf8) else { return }
+    private static func save(token: String, key: String) {
+        let data = token.data(using: .utf8)!
         
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
@@ -35,13 +35,15 @@ class KeychainService {
             kSecValueData as String: data
         ]
         
+        SecItemDelete(query as CFDictionary)
         let status = SecItemAdd(query as CFDictionary, nil)
+        
         if status != errSecSuccess {
-            print("error rame")
+            print("keychain failed status: \(status)")
         }
     }
     
-    static func getToken(forKey key: String) -> String? {
+    private static func getToken(key: String) -> String? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,
@@ -49,14 +51,13 @@ class KeychainService {
             kSecMatchLimit as String: kSecMatchLimitOne
         ]
         
-        var result: AnyObject?
-        let status = SecItemCopyMatching(query as CFDictionary, &result)
+        var item: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &item)
         
-        guard status == errSecSuccess, let data = result as? Data,
-              let token = String(data: data, encoding: .utf8) else {
+        if status == errSecSuccess, let data = item as? Data, let token = String(data: data, encoding: .utf8) {
+            return token
+        } else {
             return nil
         }
-        
-        return token
     }
 }
