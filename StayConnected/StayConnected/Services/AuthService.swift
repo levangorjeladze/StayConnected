@@ -29,4 +29,17 @@ class AuthService {
             }
         }
     }
+
+    func register(username: String, password: String, completion: @escaping (Bool) -> Void) {
+        let parameters: [String: Any] = ["username": username, "password": password]
+        
+        NetworkService.shared.request(endpoint: "/api/register/", method: .post, parameters: parameters) { response in
+            switch response {
+            case .success:
+                completion(true)
+            case .failure:
+                completion(false)
+            }
+        }
+    }
 }

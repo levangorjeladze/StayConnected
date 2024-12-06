@@ -163,6 +163,29 @@ class SignUpViewController: UIViewController {
     }
 
     @objc func signUpButtonTapped() {
-        print("Sign up button tapped")
+        guard let fullName = fullNameTextField.text, !fullName.isEmpty,
+              let password = passwordTextField.text, !password.isEmpty,
+              let confirmPassword = confirmPasswordTextField.text, !confirmPassword.isEmpty else {
+            return
+        }
+
+        if password != confirmPassword {
+            return
+        }
+
+        AuthService().register(username: fullName, password: password) { [weak self] success in
+            if success {
+                DispatchQueue.main.async {
+                    self?.navigateToLogin()
+                }
+            } else {
+                print("error")
+            }
+        }
+    }
+
+    func navigateToLogin() {
+        let loginVC = LoginViewController()
+        navigationController?.pushViewController(loginVC, animated: true)
     }
 }
