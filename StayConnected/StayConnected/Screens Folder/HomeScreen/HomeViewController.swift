@@ -11,6 +11,8 @@ final class HomeViewController: UIViewController {
     
     private let viewModel = HomeViewModel()
     
+    private var tagsForQuestions: [Tag] = []
+    
     private let questionsLabel: UILabel = {
         let label = UILabel()
         label.text = "Questions"
@@ -58,7 +60,7 @@ final class HomeViewController: UIViewController {
         return button
     }()
     
-    private let personallButton: UIButton = {
+    private let personalButton: UIButton = {
         let button = UIButton()
         button.setTitle("Personal", for: .normal)
         button.backgroundColor = . systemGray
@@ -77,7 +79,6 @@ final class HomeViewController: UIViewController {
         tableView.delegate = self
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
-        tableView.allowsSelection = false
         tableView.showsVerticalScrollIndicator = false
         return tableView
     }()
@@ -99,10 +100,9 @@ final class HomeViewController: UIViewController {
         setupNavigation()
         setupQuestionTableView()
         viewModel.fetchPosts { [weak self] in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
                 self?.questionTableView.reloadData()
             }
-
         }
     }
     
@@ -121,7 +121,7 @@ final class HomeViewController: UIViewController {
     private func setupNavigation() {
         view.addSubview(navigationStackView)
         navigationStackView.addArrangedSubview(generalButton)
-        navigationStackView.addArrangedSubview(personallButton)
+        navigationStackView.addArrangedSubview(personalButton)
         
         navigationStackView.leadingAnchor.constraint(equalTo: questionsStackView.leadingAnchor)
             .isActive = true
@@ -129,6 +129,9 @@ final class HomeViewController: UIViewController {
             .isActive = true
         navigationStackView.topAnchor.constraint(equalTo: questionsStackView.bottomAnchor, constant: 20)
             .isActive = true
+        
+        personalButton.addTarget(self, action: #selector(personalButtonTapped), for: .touchUpInside)
+        generalButton.addTarget(self, action: #selector(generalButtonTapped), for: .touchUpInside)
     }
     
     private func setupQuestionTableView() {
@@ -144,6 +147,24 @@ final class HomeViewController: UIViewController {
     
     @objc private func addQuestionButtonTapped() {
         navigationController?.present(AddQuestionViewController(), animated: true)
+    }
+    
+    @objc private func personalButtonTapped() {
+        UIView.animate(withDuration: 0.2) { [weak self] in
+            self?.personalButton.backgroundColor = UIColor(hex: "#4E53A2")
+            self?.generalButton.backgroundColor = . systemGray
+        }
+        viewModel.filterPosts(by: "user")
+        questionTableView.reloadData()
+    }
+    @objc private func generalButtonTapped() {
+        UIView.animate(withDuration: 0.2) { [weak self] in
+            self?.generalButton.backgroundColor = UIColor(hex: "#4E53A2")
+            self?.personalButton.backgroundColor = . systemGray
+        }
+        viewModel.fetchPosts { [weak self] in
+            self?.questionTableView.reloadData()
+        }
     }
 }
 
@@ -169,13 +190,21 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case 0:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableViewCell.identifier, for: indexPath)
                     as? SearchTableViewCell else { return UITableViewCell() }
+            tableView.allowsSelection = false
             return cell
         case 1:
-            if viewModel.getTagsCount() > 0 {
+            if viewModel.getPostsCount() > 0 {
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: QuestionTableViewCell.identifier, for: indexPath)
                         as? QuestionTableViewCell else {
                     return UITableViewCell()
                 }
+                cell.selectionStyle = .none
+                cell.tags.append(contentsOf: (self.viewModel.getTags(at: indexPath.row)))
+                cell.titleLabel.text = viewModel.getPostAuthor(at: indexPath.row)
+                cell.questionLabel.text = viewModel.getPostTitle(at: indexPath.row)
+                cell.repliesLabel.text = "Replies: \(viewModel.getPostReplies(at: indexPath.row))"
+                tableView.allowsSelection = true
+
                 return cell
             } else {
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: EmptyQuestionsCell.identifier, for: indexPath)
@@ -190,5 +219,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         125
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let questionDetailsViewModel = QuestionDetailViewModel(question: viewModel.getPost(at: indexPath.row))
+        let questionDetailsVC = QuestionDetailViewController(viewModel: questionDetailsViewModel)
+        navigationController?.pushViewController(questionDetailsVC, animated: true)
     }
 }

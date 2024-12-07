@@ -7,9 +7,10 @@
 
 import UIKit
 
-class QuestionTableViewCell: UITableViewCell {
+final class QuestionTableViewCell: UITableViewCell {
 
     let viewModel = HomeViewModel()
+    var tags: [Tag] = []
     
     static let identifier = "QuestionCell"
 
@@ -48,28 +49,26 @@ class QuestionTableViewCell: UITableViewCell {
         return stackView
     }()
     
-    private var titleLabel: UILabel = {
+    var titleLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .caption1)
         label.textColor = .lightGray
-        label.text = "Swift Operators"
         return label
     }()
     
-    private var questionLabel: UILabel = {
+    var questionLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .subheadline)
         label.textColor = .label
-        label.text = "How to implement the code"
+        label.numberOfLines = 2
         return label
 
     }()
     
-    private var repliesLabel: UILabel = {
+    var repliesLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .caption1)
         label.textColor = .lightGray
-        label.text = "replies: 5"
         return label
     }()
     
@@ -120,18 +119,20 @@ class QuestionTableViewCell: UITableViewCell {
         questionStackView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 15).isActive = true
         questionStackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -15).isActive = true
         questionStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15).isActive = true
+        
+        detailStackView.widthAnchor.constraint(equalTo: badgeAndReplyStackView.widthAnchor, multiplier: 4).isActive = true
     }
 }
 
 extension QuestionTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.getTagsCount()
+        tags.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionViewCell.identifier, for: indexPath)
         as? HomeCollectionViewCell else { return UICollectionViewCell() }
-        cell.configure(with: viewModel.getTag(at: indexPath.row))
+        cell.configure(with: tags[indexPath.row].name)
         return cell
     }
 }

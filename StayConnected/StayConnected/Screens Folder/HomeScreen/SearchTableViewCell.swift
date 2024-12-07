@@ -74,13 +74,13 @@ final class SearchTableViewCell: UITableViewCell {
 
 extension SearchTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.getTagsCount()
+        viewModel.getTagsCountForSearch()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionViewCell.identifier, for: indexPath)
         as? HomeCollectionViewCell else { return UICollectionViewCell() }
-        cell.configure(with: viewModel.getTag(at: indexPath.row))
+        cell.configure(with: viewModel.getTagsForSearch(at: indexPath.row))
         return cell
     }
 }
