@@ -97,6 +97,7 @@ class ProfileViewController: UIViewController {
         logOutButton.setTitleColor(.white, for: .normal)
         logOutButton.layer.cornerRadius = 8
         logOutButton.translatesAutoresizingMaskIntoConstraints = false
+        logOutButton.addTarget(self, action: #selector(didTapLogOut), for: .touchUpInside)
         view.addSubview(logOutButton)
         
         let logOutIcon = UIImageView(image: UIImage(systemName: "arrow.right.circle.fill"))
@@ -189,5 +190,11 @@ class ProfileViewController: UIViewController {
     @objc func didTapAnsweredQuestions() {
         let answeredQuestionVC = AnsweredQuestionViewController()
         navigationController?.pushViewController(answeredQuestionVC, animated: true)
+    }
+    
+    @objc func didTapLogOut() {
+        let loginVC = LoginViewController()
+        loginVC.modalPresentationStyle = .fullScreen
+        present(loginVC, animated: true, completion: nil)
     }
 }
