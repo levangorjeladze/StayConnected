@@ -94,13 +94,13 @@ class LoginViewController: UIViewController {
         guard let email = emailTextField.text, let password = passwordTextField.text else { return }
         
         if let _ = KeychainService.getAccessToken() {
-            let homeViewController = HomeViewController()
-            navigationController?.pushViewController(homeViewController, animated: true)
+            let mainTabBarController = MainTabBarController()
+            navigationController?.pushViewController(mainTabBarController, animated: true)
         } else {
             viewModel.login(email: email, password: password) { [weak self] success in
                 if success {
-                    let homeViewController = HomeViewController()
-                    self?.navigationController?.pushViewController(homeViewController, animated: true)
+                    let mainTabBarController = MainTabBarController()
+                    self?.navigationController?.pushViewController(mainTabBarController, animated: true)
                 } else {
                     let alert = UIAlertController(title: "Error", message: "Login failed", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default))
